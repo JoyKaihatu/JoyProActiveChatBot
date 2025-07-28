@@ -11,14 +11,16 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google/genai": "^1.9.0",
     "@mentra/sdk": "^2.0.3",
+    "axios": "^1.11.0",
     "express": "^4.21.2",
     "ws": "^8.18.1"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
     "@types/express": "^5.0.1",
     "@types/node": "^22.13.14",
-    "@types/ws": "^8.18.0"
+    "@types/ws": "^8.18.0",
+    "typescript": "^5.0.0"
   }
 }

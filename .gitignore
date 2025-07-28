@@ -11,3 +11,10 @@ bun.lock
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log* 
+__pycache__/
+chat_history/
+venv/
+src/Test_On_Python/
+src/index_2.ts
+src/index_5.ts
+src/old_index.ts
