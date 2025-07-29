@@ -5,7 +5,11 @@ from google.generativeai.types import content_types
 import json
 import os
 import re
+from dotenv import load_dotenv
+load_dotenv()
 
+
+print("API Key: ", os.getenv("GEMINI_API_KEY"))
 genai.configure(api_key= os.getenv("GEMINI_API_KEY"))
 
 SYSTEM_PROMPT = r"""
@@ -23,6 +27,9 @@ General proactive rule : You should try to be proactive, if there are any hard w
     * If the user is trying to solve a problem you can help with (e.g., "Hmm, what's another word for 'happy'?").
     * If the user ask for a definition or explanation (e.g., "What does 'serendipity' mean?").
     * If the user is in a lecture or meeting and asks a question that is relevant to the topic, or if there are any term words that need explanation. (e.g., "What is the main idea of this lecture?").
+    * If the previous context suggest the user is confirming or looking for clarification / help (e.g., "Can you explain that again?", "I didn't understand that part.").
+    * If the previous context override this rule, such as the user is asking for real time translation base on any input you will get after.
+    * If there are any hard words or phrases that the user is struggling with, you should try to ask user for confirmation wether user want any explanation, and explain them if user need.
 
 2.  **DO NOT RESPOND (shouldRespond: false):**
     * If the user is clearly talking to another person.
@@ -50,7 +57,7 @@ You MUST format your entire output as a single, raw JSON object, and nothing els
     
 """
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.0-flash-lite")
 HISTORY_DIR = "chat_history"
 
 app = FastAPI()
@@ -96,6 +103,12 @@ def chat_endpoint(chat: ChatInput):
     else:
         chat_session = model.start_chat()
     user_message = SYSTEM_PROMPT + "\n\n User_question: " + chat.user_message
+    print("------USER MESSAGE------")
+    print(user_message)
+    print("------USER MESSAGE END------")
+    print("------CHAT USER MESSAGE------")
+    print(chat.user_message)
+    print("------CHAT USER MESSAGE END------")
     response = chat_session.send_message(user_message)
 
     jsonString = response.text if not None else "{}"

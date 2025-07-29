@@ -42,7 +42,7 @@ class VoiceActivationServer extends AppServer {
     session.logger.info(`🔊  Session ${sessionId} started for ${userId}`);
 
     // 1️⃣  Subscribe to speech transcriptions
-    const unsubscribe = session.events.onTranscription((data) => {
+    const unsubscribe = session.events.onTranscription(async (data) => {
       // 2️⃣  Ignore interim results – we only care about the final text
       if (!data.isFinal) return;
 
@@ -55,15 +55,21 @@ class VoiceActivationServer extends AppServer {
       const spokenText = data.text.toLowerCase().trim();
       session.logger.debug(`Heard: "${spokenText}"`);
 
-      session.layouts.showTextWall("thinking...", {durationMs: 1000});
+      // session.layouts.showTextWall("thinking...", {durationMs: 1000});
 
-      const reply = sendChatMessage(userId, spokenText);
+      const reply = await sendChatMessage(userId, spokenText);
 
       let reply_clean:GeminiOutput = reply;
 
-      session.logger.info(`Bot Reply: "${reply_clean}"`);
+      session.logger.info(`Bot Reply: "${reply_clean.responseText}"`);
+      if(reply_clean.shouldRespond === false) {
+        session.logger.info("Bot decided not to respond.");
+      }
+      if(reply_clean.shouldRespond === true) {
+        session.layouts.showTextWall(String(reply_clean.responseText),{durationMs: 7000});
+        session.logger.info("Bot decided to respond.");
+      }
 
-      session.layouts.showTextWall(String(reply_clean.responseText),{durationMs: 7000});
 
 
 
