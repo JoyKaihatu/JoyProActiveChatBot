@@ -36,7 +36,7 @@ MentraOS install links: [mentra.glass/install](https://mentra.glass/install)
 
 3. Clone your new repo locally: `git clone <your-repo-url>`
 
-4. cd into your repo, then type `bun install`
+4. cd into your repo, then type `bun install` and `pip install requirements.txt`
 
 5. Set up your environment variables:
    * Create a `.env` file in the root directory by copying the example: `cp .env.example .env`
